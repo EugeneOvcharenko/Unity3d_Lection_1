@@ -8,7 +8,7 @@ public class TetrisBlockPlacement : MonoBehaviour {
 	public	TetrisBlockCreator	creator;
 	public	int					X;
 	public	int					Y;
-
+	public	int					W;
 
 	void Start()
 	{
@@ -18,12 +18,19 @@ public class TetrisBlockPlacement : MonoBehaviour {
 		}
 	}
 
-	public void Init( TetrisBlockCreator c, TetrisGrid g )
+	public void Init( TetrisBlockCreator c, TetrisGrid g, int set_w )
 	{
 		Grid = g;
 		creator = c;
 		X = g.GetStartX();
 		Y = g.GetStartY();
+		W = set_w;
+
+		if ( g.countX < X + W )
+		{
+			X -= W;
+		}
+
 		Update();
 	}
 
