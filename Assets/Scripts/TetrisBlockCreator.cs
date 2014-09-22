@@ -5,7 +5,14 @@ using System.Collections.Generic;
 [System.Serializable]
 public class TetrisBlockTemplate
 {
-	public	bool[] template;
+	public	bool[]	template;
+	public	int		length;
+	public	int		maxX;
+
+	public TetrisBlockTemplate( int count )
+	{
+		template = new bool[ count ];
+	}
 }
 
 public class TetrisBlockCreator : MonoBehaviour {
@@ -18,9 +25,10 @@ public class TetrisBlockCreator : MonoBehaviour {
 	public	GameObject	blockRootPrefab;
 	public	GameObject	blockSinglePrefab;
 
-	public	TetrisBlockTemplate[] templates;
+	public	TetrisBlockTemplate[]		templates;
 
-	private	List<TetrisBlockPlacement> blocks;
+	private	List<TetrisBlockPlacement>	blocks;
+	private	TetrisBlockPlacement		lastCreated = null;
 
 	void Start () {
 		blocks = new List<TetrisBlockPlacement>();
@@ -56,16 +64,15 @@ public class TetrisBlockCreator : MonoBehaviour {
 
 		int tr = Random.Range( 0, templates.Length );
 		TetrisBlockTemplate t = templates[ tr ];
+		t.length = t.template.Length / 2;
 
-		int maskLength = t.template.Length / 2;
-		
-		if ( maskLength < 1 )
+		if ( t.length < 1 )
 		{
 			Destroy( root );
 			return;
 		}
 
-		int max_x = 0;
+		t.maxX = 0;
 		for ( i = 0; i < t.template.Length; i++ )
 		{
 			if ( t.template[ i ] )
@@ -77,10 +84,10 @@ public class TetrisBlockCreator : MonoBehaviour {
 				block.transform.localPosition = pos;
 				block.renderer.material.color = c;
 
-				max_x = Mathf.Max( max_x, (int)pos.x + 1 );
+				t.maxX = Mathf.Max( t.maxX, (int)pos.x + 1 );
 			}
 
-			if ( i == maskLength - 1 )
+			if ( i == t.length - 1 )
 			{
 				pos.y += 1;
 				pos.x  = 0f;
@@ -92,16 +99,24 @@ public class TetrisBlockCreator : MonoBehaviour {
 		}
 
 		TetrisBlockPlacement p = root.GetComponent<TetrisBlockPlacement> ();
+		p.shape = t;
 		blocks.Add (p);
-		p.Init (this, Grid, max_x);
+		lastCreated = p;
+		p.Init (this, Grid, t.maxX);
 	}
 	
 	IEnumerator CreateBlock () {
 		while ( true )
 		{
-			CreateComplexBlock ();
-
-			yield return new WaitForSeconds( createTime );
+			if ( lastCreated != null && lastCreated.falling )
+			{
+				yield return new WaitForEndOfFrame();
+			}
+			else
+			{
+				CreateComplexBlock();
+				yield return new WaitForSeconds( createTime );
+			}
 		}
 	}
 

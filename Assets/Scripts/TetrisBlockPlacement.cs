@@ -9,6 +9,12 @@ public class TetrisBlockPlacement : MonoBehaviour {
 	public	int					X;
 	public	int					Y;
 	public	int					W;
+	public	bool				falling		= true;
+
+	public	bool				checkLeft	= false;
+	public	bool				checkRight	= false;
+
+	public	TetrisBlockTemplate	shape;
 
 	void Start()
 	{
@@ -34,14 +40,41 @@ public class TetrisBlockPlacement : MonoBehaviour {
 		Update();
 	}
 
+	void CheckLeft ()
+	{
+		X--;
+		X = Grid.CanTakeThisPlace (this, false) ? X : ++X;
+		checkLeft = false;
+	}
+
+	void CheckRight ()
+	{
+		X++;
+		X = Grid.CanTakeThisPlace (this, false) ? X : --X;
+		checkRight = false;
+	}
+
 	public void Fall()
 	{
-		Y--;
-		if ( Grid != null )
+		if ( falling && Grid != null )
 		{
-			if ( Grid.isDead( this ) )
+			if ( checkLeft )
 			{
-				Destroy( gameObject );
+				CheckLeft ();
+			}
+
+			if ( checkRight )
+			{
+				CheckRight ();
+			}
+
+			Y--;
+			if ( !Grid.CanTakeThisPlace( this, false ) )
+			{
+				//return place
+				Y++;
+				Grid.CanTakeThisPlace( this, true );
+				falling = false;
 			}
 		}
 	}
@@ -55,9 +88,15 @@ public class TetrisBlockPlacement : MonoBehaviour {
 	}
 
 	public void Update () {
-	
-		if ( Grid != null )
+
+		if ( falling && Grid != null )
 		{
+			checkLeft	= checkLeft  || Input.GetKey( KeyCode.LeftArrow );
+			checkRight	= checkRight || Input.GetKey( KeyCode.RightArrow );
+		
+			if ( Input.GetKeyUp( KeyCode.LeftArrow ) )	CheckLeft();
+			if ( Input.GetKeyUp( KeyCode.RightArrow ) )	CheckRight();
+
 			transform.localPosition = Grid.GetXY( X, Y );
 		}
 	}
