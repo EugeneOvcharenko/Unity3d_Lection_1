@@ -1,13 +1,13 @@
 Unity3d Lection 2
 =================
 
-Unity3d Lection 2. TBD
+Unity3d Lection 2. First prototype - detailed review.
 
 Hangout:
--
+https://plus.google.com/events/c9pvokareq78484hgfni7m4dl2o
 
 Youtube:
--
+http://www.youtube.com/watch?v=mQKS6jk33xQ
 
 Web Demo:
 https://1a23cf36a8414aea960b3654bdf1d8c6ce163771.googledrive.com/host/0B4DWeEL6iGlfTUFqcWVPQlVIX28/tetris_web_2.html
