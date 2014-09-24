@@ -47,3 +47,8 @@ https://www.youtube.com/watch?v=BVuy4H1J8sQ
 
 Please address you questions here:
 https://docs.google.com/forms/d/1HtqXdQfFqaQk1-YnkTrr3kkGSdmLL6XjUs8pBXWUowc/edit
+
+--------------------------------------------------------------------
+
+Optimization in Unity3d and gamedev (GetApp conference, may 2014):
+https://www.youtube.com/watch?v=MzE1NSlRB7A 
